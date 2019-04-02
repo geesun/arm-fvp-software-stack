@@ -13,6 +13,6 @@
   <project name="landing-teams/working/arm/u-boot" path="u-boot" remote="linaro" revision="a624e22f083eb0af7ed868f8bdbcd198c17588ca" upstream="master"/>
   <project name="mbedtls.git" path="mbedtls" remote="mbedtls" revision="7d728bd70e6a8d129ee07813da1538de1bf95cb2" upstream="master"/>
   <project name="geesun/manifests" path="tools" remote="github" revision="master" upstream="master">
-		  <linkfile dest="build" src="tools/build"/>
+		  <linkfile dest="Makefile" src="build/Makefile"/>
   </project>
 </manifest>
