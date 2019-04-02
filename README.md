@@ -1,6 +1,11 @@
-# manifests
-To download Arm software stack for Arm Foundation platform
+#Download and build Arm software stack
 
-repo init -u https://github.com/geesun/manifests.git
+#Arm Foundation platform
 
-repo sync 
+```
+   repo init -u https://github.com/geesun/manifests.git
+   repo sync 
+   make 
+   make run
+   
+```
