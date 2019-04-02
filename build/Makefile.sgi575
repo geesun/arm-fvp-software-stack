@@ -1,5 +1,5 @@
 CROSS_COMPILE 	?= aarch64-linux-gnu- 
-CROSS_COMPILE_M ?= bin/arm-none-eabi-
+CROSS_COMPILE_M ?= arm-none-eabi-
 MODEL 			?= FVP_CSS_SGI-575/models/Linux64_GCC-4.8/FVP_CSS_SGI-575
 MODEL_CONFIG	?= FVP_CSS_SGI-575/models/Linux64_GCC-4.8/SGI-575_cmn600.yml
 
