@@ -1,6 +1,6 @@
-#Download and build Arm software stack
+# Download and build Arm software stack
 
-#Arm Foundation platform
+## Arm Foundation platform
 
 ```
    repo init -u https://github.com/geesun/manifests.git
@@ -12,7 +12,7 @@
    
 ```
 
-#Arm SGI-575 platform
+## Arm SGI-575 platform
 
 ```
    repo init -u https://github.com/geesun/manifests.git -m sgi575.xml
