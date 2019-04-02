@@ -6,7 +6,7 @@ MODEL_CONFIG	?= FVP_CSS_SGI-575/models/Linux64_GCC-4.8/SGI-575_cmn600.yml
 TOP_DIR = $(shell pwd)
 SHELL = /bin/bash 
 
-TARGETS = scp arm-tf linux busybox grub ramdisk  
+TARGETS = scp arm-tf linux busybox ramdisk  grub
 
 build_TARGETS = $(foreach t,$(TARGETS),$(t).build)
 clean_TARGETS = $(foreach t,$(TARGETS),$(t).clean)
