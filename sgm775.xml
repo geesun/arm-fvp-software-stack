@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <remote fetch="git://git.busybox.net/" name="busybox"/>
+  <remote fetch="https://github.com/" name="github"/>
+  <remote fetch="https://git.linaro.org/" name="linaro"/>
+  <remote fetch="https://github.com/ARMmbed/" name="mbedtls"/>
+  <remote fetch="https://github.com/OP-TEE/" name="optee"/>
+
+  <project name="ARM-software/arm-trusted-firmware" path="arm-tf" remote="github" revision="83f51dac2dce56152697003597077d2306729514" upstream="master"/>
+  <project name="ARM-software/SCP-firmware" path="scp" remote="github" revision="8533a3eeb7e927d4e3819b0a372e3023dd786957" upstream="master"/>
+  <project name="ARM-software/CMSIS_5.git" path="scp/cmsis" remote="github" revision="refs/tags/5.2.0" upstream="master"/>
+  <project name="busybox" remote="busybox" revision="111cdcf295b4cab78521480f52b295d9ae719263" upstream="master"/>
+  <project name="landing-teams/working/arm/kernel-release" path="linux" remote="linaro" revision="d4c7d1c81b043f3b60b6a7df8a581e81d57e170e" upstream="ack-4.9-armlt"/>
+  <project name="landing-teams/working/arm/ramdisk" path="ramdisk" remote="linaro" revision="b57c098ca0561ff39aa70b3fe2c795b7a0108717" upstream="master"/>
+  <project name="landing-teams/working/arm/u-boot" path="u-boot" remote="linaro" revision="ae6380c7133a1d717d18ca77732d6b3474095e26" upstream="master"/>
+  <project name="landing-teams/working/arm/device-tree" path="device-tree" remote="linaro" revision="49c641794baac80a156afdffa788831f380668b4" upstream="master"/>
+  <project name="mbedtls.git" path="mbedtls" remote="mbedtls" revision="7d728bd70e6a8d129ee07813da1538de1bf95cb2" upstream="master"/>
+  <project name="optee_client.git" path="optee/optee_client" remote="optee" revision="73b4e490a8ed0b4a7714818e80998b9d8a7da958" upstream="master"/>
+  <project name="optee_os.git" path="optee/optee_os" remote="optee" revision="fefbee97c9e888dd11acff497b6f8b515b70d1ca" upstream="master"/>
+  <project name="geesun/manifests" path="tools" remote="github" revision="master" upstream="master">
+		  <linkfile dest="Makefile" src="build/Makefile.sgm775"/>
+  </project>
+</manifest>
