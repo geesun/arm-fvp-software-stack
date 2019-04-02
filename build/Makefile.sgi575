@@ -1,6 +1,7 @@
 CROSS_COMPILE 	?= aarch64-linux-gnu- 
-CROSS_COMPILE_M ?= /home/qixxu01/tools/arm-m//bin/arm-none-eabi-
-MODEL 			?= /home/qixxu01/FVP_CSS_SGI-575/models/Linux64_GCC-4.8/FVP_CSS_SGI-575
+CROSS_COMPILE_M ?= bin/arm-none-eabi-
+MODEL 			?= FVP_CSS_SGI-575/models/Linux64_GCC-4.8/FVP_CSS_SGI-575
+MODEL_CONFIG	?= FVP_CSS_SGI-575/models/Linux64_GCC-4.8/SGI-575_cmn600.yml
 
 TOP_DIR = $(shell pwd)
 SHELL = /bin/bash 
@@ -163,7 +164,7 @@ grub.clean:
 
 
 run:
-	$(MODEL) -C css.cmn600.mesh_config_file="/home/qixxu01/FVP_CSS_SGI-575/models/Linux64_GCC-4.8/SGI-575_cmn600.yml"  \
+	$(MODEL) -C css.cmn600.mesh_config_file="$(MODEL_CONFIG)"  \
 	-C css.cmn600.force_on_from_start=1  \
 	-C css.mcp.ROMloader.fname="scp/build/product/sgi575/mcp_romfw/debug/bin/firmware.bin" \
 	-C css.scp.ROMloader.fname="scp/build/product/sgi575/scp_romfw/debug/bin/firmware.bin" \
