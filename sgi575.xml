@@ -17,7 +17,7 @@
   <project name="pub/scm/linux/kernel/git/torvalds/linux.git" path="linux" remote="kernel" revision="94710cac0ef4ee177a63b5227664b38c95bbf703" upstream="master"/>
   <project name="busybox" remote="busybox" revision="111cdcf295b4cab78521480f52b295d9ae719263" upstream="master"/>
   <project name="landing-teams/working/arm/ramdisk" path="ramdisk" remote="linaro" revision="b57c098ca0561ff39aa70b3fe2c795b7a0108717" upstream="master"/>
-  <project name="mbedtls.git" path="mbedtls" remote="mbedtls" revision="bfafadb45daf8d2114e3109e2f9021fc72ee36bb" upstream="master"/>
+  <project name="mbedtls.git" path="mbedtls" remote="mbedtls" revision="6c34268e203d23bbfbfda3f7362dac8b9b9382bc" upstream="master"/>
   <project name="landing-teams/working/arm/uefi-tools.git" path="tools/uefi-tools" remote="linaro" revision="989660813d53d5b36b7cd2a00b373bb1ceef9a43" upstream="sgi575"/>
   <project name="geesun/manifests" path="tools" remote="github" revision="master" upstream="master">
 		  <linkfile dest="Makefile" src="build/Makefile.sgi575"/>

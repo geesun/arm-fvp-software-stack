@@ -1,6 +1,11 @@
-CROSS_COMPILE ?= aarch64-linux-gnu- 
-MODEL ?= /usr/local/DS-5_v5.29.1/sw/models/bin/Foundation_Platform
-TARGETS = u-boot arm-tf linux busybox ramdisk 
+CROSS_COMPILE 	?= aarch64-linux-gnu- 
+CROSS_COMPILE_M ?= /home/qixxu01/tools/arm-m//bin/arm-none-eabi-
+MODEL 			?= /home/qixxu01/FVP_CSS_SGI-575/models/Linux64_GCC-4.8/FVP_CSS_SGI-575
+
+TOP_DIR = $(shell pwd)
+SHELL = /bin/bash 
+
+TARGETS = scp arm-tf linux busybox grub ramdisk  
 
 build_TARGETS = $(foreach t,$(TARGETS),$(t).build)
 clean_TARGETS = $(foreach t,$(TARGETS),$(t).clean)
@@ -17,21 +22,45 @@ check:
 		fi; \
     done ;
 
-u-boot.build:
-	export ARCH=aarch64 ; \
-	export CROSS_COMPILE=$(CROSS_COMPILE) ; \
-	cd u-boot ;\
-	make -j 16 O=out vexpress_aemv8a_semi_config ;\
-	make -j 16 O=out ;
+scp.build:
+	cd scp ; \
+	make PRODUCT=sgi575 MODE=debug  CC=$(CROSS_COMPILE_M)gcc
 
-u-boot.clean:
-	rm u-boot/out -rf 
+scp.clean:
+	rm scp/build -rf 
+
+uefi.build:
+	cd tools/acpica/generate/unix; \
+	unset HOST; \
+	make iasl
+		
+	cd uefi/edk2 ; \
+	CROSS_COMPILE_DIR=$(dirname $(CROSS_COMPILE)) ; \
+	PATH="$$PATH:$$CROSS_COMPILE_DIR" ; \
+	source edksetup.sh ; \
+	make -C BaseTools ; \
+	export EDK2_TOOLCHAIN=GCC5 ; \
+	export GCC5_AARCH64_PREFIX=$(CROSS_COMPILE) ;\
+    EXTRA_OPTIONS=-s  ; \
+	IASL_PREFIX=$(TOP_DIR)/tools/acpica/generate/unix/bin/ ; \
+	$(TOP_DIR)/tools/uefi-tools/edk2-build.sh -e ./ -p edk2-platforms -D EDK2_OUT_DIR=Build/ArmSgi -b DEBUG sgi575
+
+
+uefi.clean:
+	cd uefi/edk2 ; \
+	CROSS_COMPILE_DIR=$(dirname $(CROSS_COMPILE)) ; \
+	PATH="$$PATH:$$CROSS_COMPILE_DIR" ; \
+	source edksetup.sh ; \
+	make -C BaseTools ; \
+	rm -rf Build/ArmSgi ; 
+	cd tools/acpica/generate/unix; \
+	make veryclean;
 
 arm-tf.build: 
 	export CROSS_COMPILE=$(CROSS_COMPILE) ; \
 	cd arm-tf; \
-	make -j 16 PLAT=fvp ARCH=aarch64 DEBUG=1 \
-	ARM_TSP_RAM_LOCATION=dram BL33=../u-boot/out/u-boot.bin \
+	make -j 16 PLAT=sgi575 ARCH=aarch64 DEBUG=1 \
+	ARM_TSP_RAM_LOCATION=dram BL33=../uefi/edk2/Build/ArmSgi/DEBUG_GCC5/FV/BL33_AP_UEFI.fd \
 	TRUSTED_BOARD_BOOT=1 ARM_ROTPK_LOCATION=devel_rsa \
 	KEY_ALG=rsa TF_MBEDTLS_KEY_ALG=rsa \
 	ROT_KEY=./plat/arm/board/common/rotpk/arm_rotprivk_rsa.pem  \
@@ -47,11 +76,7 @@ linux.build:
 	export CROSS_COMPILE=$(CROSS_COMPILE) ; \
 	cd linux ; \
 	mkdir -p out ;\
-	scripts/kconfig/merge_config.sh -O out/ \
-	linaro/configs/linaro-base.conf \
-	linaro/configs/linaro-base-arm64.conf \
-	linaro/configs/big-LITTLE-MP.conf \
-	linaro/configs/vexpress64.conf; \
+	make O=out/ defconfig ;\
 	make O=out/ -j16 Image dtbs
 
 linux.clean:
@@ -72,18 +97,77 @@ busybox.clean:
 ramdisk.build:
 	cd ramdisk ; \
 	cp ../busybox/out/_install/bin/busybox . ;\
-	../linux/out/usr/gen_init_cpio files.txt > ramdisk-busybox.img ;\
-	../u-boot/out/tools/mkimage  -A arm64 -O linux -C none -T ramdisk -n ramdisk -a 0x88000000 -e 0x88000000 -n "BusyBox ramdisk" -d ramdisk-busybox.img ramdisk.img
+	../linux/out/usr/gen_init_cpio files.txt > ramdisk.img ;\
 
 ramdisk.clean:
 	rm ramdisk/busybox ramdisk/*.img -rf
 
+grub.build: 
+	cd grub; \
+	mkdir -p out ;\
+    echo "set prefix=(\$$root)/grub/" >out/sgi575.cfg ;\
+	CROSS_COMPILE_DIR=$(dirname $(CROSS_COMPILE)) ; \
+	PATH="$$PATH:$$CROSS_COMPILE_DIR" ; \
+	if [ ! -f Makefile ] ; then \
+		./autogen.sh ; \
+		./configure STRIP=aarch64-linux-gnu-strip --target=aarch64-linux-gnu --with-platform=efi --prefix=$(TOP_DIR)/grub/out/ --disable-werror  CFLAGS="-g" LDFLAGS="-g"; \
+	fi ;\
+    make -j8 install ;\
+    out/bin/grub-mkimage -v -c out/sgi575.cfg -o out/bootaa64.efi -O arm64-efi -p  part_gpt part_msdos ntfs ntfscomp hfsplus fat ext2 normal chain boot configfile linux help part_msdos terminal terminfo configfile lsefi search normal gettext loadenv read search_fs_file search_fs_uuid search_label
+	cd grub/out ; \
+	IMG_BB=grub-busybox.img ; \
+	BLOCK_SIZE=512 ;  \
+	SEC_PER_MB=$$((1024*2)) ; \
+	FAT_SIZE_MB=20 ; \
+	EXT3_SIZE_MB=200 ;\
+	PART_START=$$((1*SEC_PER_MB)) ;\
+	FAT_SIZE=$$((FAT_SIZE_MB*SEC_PER_MB-(PART_START))) ;\
+	EXT3_SIZE=$$((EXT3_SIZE_MB*SEC_PER_MB-(PART_START))) ;\
+	rm -f $$IMG_BB ;\
+	dd if=/dev/zero of=fat_part bs=512 count=38912 ;\
+	mkfs.vfat fat_part ;\
+	mmd -i fat_part ::/EFI ;\
+	mmd -i fat_part ::/EFI/BOOT ;\
+	mmd -i fat_part ::/grub ;\
+	mcopy -i fat_part bootaa64.efi ::/EFI/BOOT ;\
+	dd if=/dev/zero of=$$IMG_BB bs=$$BLOCK_SIZE count=$$PART_START ;\
+	echo "set debug=\"loader,mm\"" > grub.cfg ;\
+	echo "set term=\"vt100\"" >>grub.cfg ;\
+	echo "set default=\"0\""  >>grub.cfg ; \
+	echo "set timeout=\"1\"" >> grub.cfg; \
+	echo "set root=(hd1,msdos2)" >>grub.cfg ;\
+	echo "menuentry 'Arm SGI575' {" >>grub.cfg ; \
+	echo "        linux /Image acpi=force console=ttyAMA0,115200 ip=dhcp root=/dev/vda2 rootwait verbose debug" >> grub.cfg ;\
+	echo "	 initrd /ramdisk-busybox.img " >> grub.cfg ;\
+	echo "}" >> grub.cfg ; \
+	mcopy -i fat_part -o grub.cfg ::/grub/grub.cfg ;\
+	dd if=/dev/zero of=ext3_part bs=$$BLOCK_SIZE count=$$EXT3_SIZE ;\
+	mkdir -p mnt ;\
+	if [[ $$(findmnt -M "mnt") ]]; then \
+    	fusermount -u mnt ;\
+	fi; \
+	mkfs.ext3 -F ext3_part ;\
+	fuse-ext2 ext3_part mnt -o rw+ ;\
+	cp $(TOP_DIR)/linux/out/arch/arm64/boot/Image ./mnt ;\
+	cp $(TOP_DIR)/ramdisk/ramdisk.img ./mnt/ramdisk-busybox.img ;\
+	sync ;\
+	fusermount -u mnt ;\
+	cat fat_part >>$$IMG_BB ;\
+	cat ext3_part >>$$IMG_BB ;\
+	(echo n; echo p; echo 1; echo $$PART_START; echo +$$((FAT_SIZE-1)); echo t; echo 6; echo n; echo p; echo 2; echo $$((PART_START+FAT_SIZE)); echo +$$(($$EXT3_SIZE-1)); echo w) | fdisk $$IMG_BB
+
+	
+grub.clean: 
+	rm -rf grub/out/
+
+
 
 run:
-	$(MODEL) --cores=1 --no-secure-memory --visualization --use-real-time --gicv3  \
-	--data=arm-tf/build/fvp/debug/bl1.bin@0x0 \
-	--data=arm-tf/build/fvp/debug/fip.bin@0x8000000 \
-	--data=linux/out/arch/arm64/boot/Image@0x80080000 \
-	--data=linux/out/arch/arm64/boot/dts/arm/foundation-v8-gicv3.dtb@0x82000000 \
-	--data=ramdisk/ramdisk.img@0x84000000 \
-	--arm-v8.0
+	$(MODEL) -C css.cmn600.mesh_config_file="/home/qixxu01/FVP_CSS_SGI-575/models/Linux64_GCC-4.8/SGI-575_cmn600.yml"  \
+	-C css.cmn600.force_on_from_start=1  \
+	-C css.mcp.ROMloader.fname="scp/build/product/sgi575/mcp_romfw/debug/bin/firmware.bin" \
+	-C css.scp.ROMloader.fname="scp/build/product/sgi575/scp_romfw/debug/bin/firmware.bin" \
+	-C css.trustedBootROMloader.fname="arm-tf/build/sgi575/debug/bl1.bin" \
+	-C board.flashloader0.fname="arm-tf/build/sgi575/debug/fip.bin" \
+	-C board.virtioblockdevice.image_path=grub/out/grub-busybox.img \
+	--data css.scp.armcortexm7ct=scp/build/product/sgi575/scp_ramfw/debug/bin/firmware.bin@0x0BD80000 -R
