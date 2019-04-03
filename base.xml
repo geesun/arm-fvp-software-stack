@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <remote fetch="git://git.busybox.net/" name="busybox"/>
+  <remote fetch="https://github.com/" name="github"/>
+  <remote fetch="https://git.linaro.org/" name="linaro"/>
+  <remote fetch="https://github.com/ARMmbed/" name="mbedtls"/>
+  <remote fetch="https://github.com/OP-TEE/" name="optee"/>
+
+  <project name="ARM-software/arm-trusted-firmware" path="arm-tf" remote="github" revision="83f51dac2dce56152697003597077d2306729514" upstream="master"/>
+  <project name="busybox" remote="busybox" revision="111cdcf295b4cab78521480f52b295d9ae719263" upstream="master"/>
+  <project name="landing-teams/working/arm/kernel-release" path="linux" remote="linaro" revision="9b2769768c6f813d9d1a659a38a767273026af97" upstream="latest-armlt"/>
+  <project name="landing-teams/working/arm/ramdisk" path="ramdisk" remote="linaro" revision="b57c098ca0561ff39aa70b3fe2c795b7a0108717" upstream="master"/>
+  <project name="landing-teams/working/arm/u-boot" path="u-boot" remote="linaro" revision="a624e22f083eb0af7ed868f8bdbcd198c17588ca" upstream="master"/>
+  <project name="mbedtls.git" path="mbedtls" remote="mbedtls" revision="7d728bd70e6a8d129ee07813da1538de1bf95cb2" upstream="master"/>
+  <project name="optee_client.git" path="optee/optee_client" remote="optee" revision="73b4e490a8ed0b4a7714818e80998b9d8a7da958" upstream="master"/>
+  <project name="optee_os.git" path="optee/optee_os" remote="optee" revision="6d57389f9eec0c213da917e35861a8eca4b205b3" upstream="master"/>
+  <project name="geesun/manifests" path="tools" remote="github" revision="master" upstream="master">
+		  <linkfile dest="Makefile" src="build/Makefile.base"/>
+  </project>
+
+</manifest>

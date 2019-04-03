@@ -22,6 +22,16 @@ https://developer.arm.com/tools-and-software/simulation-models/fixed-virtual-pla
    make run
    
 ```
+## Armv8-A Base Platform 
+```
+   repo init -u https://github.com/geesun/manifests.git -m base.xml
+   repo sync 
+   export CROSS_COMPILE=$(TOOL_CHAIN_PATH)/aarch64-linux-gnu-
+   make 
+   export MODEL=Base_RevC_AEMv8A_pkg/models/Linux64_GCC-4.9/FVP_Base_RevC-2xAEMv8A
+   make run
+```   
+
 ## CoreLink SGM-775 (Cortex-A75+Cortex-A55) System Guidance for Mobile
 
 ```
