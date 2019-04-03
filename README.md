@@ -11,6 +11,17 @@
    make run
    
 ```
+## Arm SGm-775 platform
+
+```
+   repo init -u https://github.com/geesun/manifests.git -m sgm775.xml
+   repo sync
+   export CROSS_COMPILE=$(TOOL_CHAIN_PATH)/aarch64-linux-gnu-
+   export CROSS_COMPILE_M=$(TOOL_CHAIN_PATH)/arm-none-eabi-
+   make 
+   export MODEL=FVP_CSS_SGM-775/models/Linux64_GCC-4.8/FVP_CSS_SGM-775 
+   make run
+```
 
 ## Arm SGI-575 platform
 
