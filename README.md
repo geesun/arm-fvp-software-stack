@@ -1,14 +1,14 @@
 # Download and build Arm software stack
 ## Preparation
-### Toolchain
-#### The GNU Toolchain for the Cortex-A Family
+#### Toolchains
+###### The GNU Toolchain for the Cortex-A Family
 AArch64 GNU/Linux target (aarch64-linux-gnu)
 
 https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-a/downloads
-#### The GNU Embedded Toolchain for Arm
+###### The GNU Embedded Toolchain for Arm
 https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
 
-### Fast Models
+#### Fast Models
 https://developer.arm.com/tools-and-software/simulation-models/fixed-virtual-platforms
 
 ## Armv8-A Foundation Platform
