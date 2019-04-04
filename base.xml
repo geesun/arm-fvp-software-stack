@@ -15,7 +15,7 @@
   <project name="optee_client.git" path="optee/optee_client" remote="optee" revision="73b4e490a8ed0b4a7714818e80998b9d8a7da958" upstream="master"/>
   <project name="optee_os.git" path="optee/optee_os" remote="optee" revision="6d57389f9eec0c213da917e35861a8eca4b205b3" upstream="master"/>
   <project name="geesun/manifests" path="tools" remote="github" revision="master" upstream="master">
-		  <linkfile dest="Makefile" src="build/Makefile.base"/>
+		  <linkfile dest="Makefile" src="build/base.mk"/>
   </project>
 
 </manifest>

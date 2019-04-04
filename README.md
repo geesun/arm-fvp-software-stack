@@ -14,7 +14,7 @@ https://developer.arm.com/tools-and-software/simulation-models/fixed-virtual-pla
 ## Armv8-A Foundation Platform
 
 ```
-   repo init -u https://github.com/geesun/manifests.git
+   repo init -u https://github.com/geesun/manifests.git -m foundation.xml
    repo sync 
    export CROSS_COMPILE=$(TOOL_CHAIN_PATH)/aarch64-linux-gnu-
    make 

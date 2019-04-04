@@ -20,7 +20,7 @@
   <project name="mbedtls.git" path="mbedtls" remote="mbedtls" revision="6c34268e203d23bbfbfda3f7362dac8b9b9382bc" upstream="master"/>
   <project name="landing-teams/working/arm/uefi-tools.git" path="tools/uefi-tools" remote="linaro" revision="989660813d53d5b36b7cd2a00b373bb1ceef9a43" upstream="sgi575"/>
   <project name="geesun/manifests" path="tools" remote="github" revision="master" upstream="master">
-		  <linkfile dest="Makefile" src="build/Makefile.sgi575"/>
+		  <linkfile dest="Makefile" src="build/sgi575.mk"/>
   </project>
 
 </manifest>
