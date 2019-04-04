@@ -36,10 +36,10 @@ optee.build:
 	export CROSS_COMPILE=$(CROSS_COMPILE) ; \
 	export CROSS_COMPILE64=$(CROSS_COMPILE) ; \
 	export CROSS_COMPILE32=$(CROSS_COMPILE32) ; \
-	export CFG_TEE_CORE_LOG_LEVEL=1 ; \
+	export CFG_TEE_CORE_LOG_LEVEL=3 ; \
 	export CFG_ARM64_core=y ; \
     cd optee/optee_os; \
-	make -j 16  PLATFORM=vexpress-fvp CFG_ARM_GICV3=y; \
+	make -j 16  PLATFORM=vexpress-fvp  DEBUG=1 CFG_ARM_GICV3=y; \
 	mkdir -p out/arm-plat-fvp/core ;\
 	$(CROSS_COMPILE)objcopy -O binary out/arm-plat-vexpress/core/tee.elf out/arm-plat-fvp/core/tee.bin ; \
 	cd ../.. ; \
@@ -124,6 +124,9 @@ run:
 	$(MODEL) \
 	-C pctl.startup=0.0.0.0 \
 	-C bp.secure_memory=1   \
+	-C bp.tzc_400.diagnostics=1  \
+	-C cluster0.register_reset_data=0 \
+	-C cluster1.register_reset_data=0 \
 	-C cluster0.NUM_CORES=4 \
 	-C cluster1.NUM_CORES=4 \
 	-C cache_state_modelled=0  \
