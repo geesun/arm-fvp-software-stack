@@ -3,6 +3,8 @@ CROSS_COMPILE32 ?= arm-linux-gnueabi-
 MODEL ?= /usr/local/DS-5_v5.29.1/sw/models/bin/Foundation_Platform
 TARGETS = u-boot arm-tf linux busybox ramdisk 
 
+TOP_DIR = $(shell pwd)
+
 build_TARGETS = $(foreach t,$(TARGETS),$(t).build)
 clean_TARGETS = $(foreach t,$(TARGETS),$(t).clean)
 
@@ -128,3 +130,20 @@ run:
 	--data=arm-tf/build/fvp/debug/fip.bin@0x8000000 \
 	--data=linux/out/arch/arm64/boot/Image@0x80080000 \
 	--data=ramdisk/ramdisk.img@0x84000000 \
+
+ds5:
+	@echo "Model params in DS-5:"
+	@echo $(MODEL) --arm-v8.0 \
+	--cores=1 \
+	--secure-memory \
+	--visualization \
+	--gicv3 \
+	--data=$(TOP_DIR)/arm-tf/build/fvp/debug/bl1.bin@0x0 \
+	--data=$(TOP_DIR)/arm-tf/build/fvp/debug/fip.bin@0x8000000 \
+	--data=$(TOP_DIR)/linux/out/arch/arm64/boot/Image@0x80080000 \
+	--data=$(TOP_DIR)/ramdisk/ramdisk.img@0x84000000 
+	@echo "\r\nDebug symbol in DS-5:"
+	@echo "add-symbol-file \"$(TOP_DIR)/arm-tf/build/fvp/debug/bl1/bl1.elf\" EL3:0"
+	@echo "add-symbol-file \"$(TOP_DIR)/arm-tf/build/fvp/debug/bl31/bl31.elf\" EL3:0"
+	@echo "add-symbol-file \"$(TOP_DIR)/arm-tf/build/fvp/debug/bl2/bl2.elf\" EL1S:0"
+	@echo "add-symbol-file \"$(TOP_DIR)/linux/out/vmlinux\" EL2N:0"

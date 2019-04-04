@@ -5,6 +5,8 @@ MODEL 			?= Base_RevC_AEMv8A_pkg/models/Linux64_GCC-4.9/FVP_Base_RevC-2xAEMv8A
 
 TARGETS = u-boot arm-tf linux busybox ramdisk
 
+TOP_DIR = $(shell pwd)
+
 build_TARGETS = $(foreach t,$(TARGETS),$(t).build)
 clean_TARGETS = $(foreach t,$(TARGETS),$(t).clean)
 
@@ -34,12 +36,10 @@ optee.build:
 	export CROSS_COMPILE=$(CROSS_COMPILE) ; \
 	export CROSS_COMPILE64=$(CROSS_COMPILE) ; \
 	export CROSS_COMPILE32=$(CROSS_COMPILE32) ; \
-	export PLATFORM=vexpress ; \
-	export PLATFORM_FLAVOR=fvp ; \
 	export CFG_TEE_CORE_LOG_LEVEL=1 ; \
 	export CFG_ARM64_core=y ; \
     cd optee/optee_os; \
-	make -j 16 ; \
+	make -j 16  PLATFORM=vexpress-fvp CFG_ARM_GICV3=y; \
 	mkdir -p out/arm-plat-fvp/core ;\
 	$(CROSS_COMPILE)objcopy -O binary out/arm-plat-vexpress/core/tee.elf out/arm-plat-fvp/core/tee.bin ; \
 	cd ../.. ; \
@@ -64,6 +64,7 @@ arm-tf.optee.build:
 	ROT_KEY=./plat/arm/board/common/rotpk/arm_rotprivk_rsa.pem  \
 	MBEDTLS_DIR=../mbedtls GENERATE_COT=1 \
 	FVP_HW_CONFIG_DTS=fdts/fvp-base-gicv3-psci-1t.dts \
+	FVP_USE_GIC_DRIVER=FVP_GICV3 \
 	dtbs all fip;
 
 arm-tf.build: 
@@ -122,7 +123,7 @@ ramdisk.clean:
 run:
 	$(MODEL) \
 	-C pctl.startup=0.0.0.0 \
-	-C bp.secure_memory=0   \
+	-C bp.secure_memory=1   \
 	-C cluster0.NUM_CORES=4 \
 	-C cluster1.NUM_CORES=4 \
 	-C cache_state_modelled=0  \
@@ -134,5 +135,27 @@ run:
 	--data cluster0.cpu0=linux/out/arch/arm64/boot/Image@0x80080000  -RSp \
 	-C bp.ve_sysregs.mmbSiteDefault=0    \
 	-C bp.ve_sysregs.exit_on_shutdown=1
+
+
+ds5:
+	@echo "Model params in DS-5:"
+	@echo  	-C pctl.startup=0.0.0.0 \
+	-C bp.secure_memory=1   \
+	-C cluster0.NUM_CORES=4 \
+	-C cluster1.NUM_CORES=4 \
+	-C cache_state_modelled=0  \
+	-C bp.pl011_uart0.untimed_fifos=1  \
+	-C bp.pl011_uart0.unbuffered_output=1  \
+	-C bp.secureflashloader.fname=$(TOP_DIR)/arm-tf/build/fvp/debug/bl1.bin \
+	-C bp.flashloader0.fname=$(TOP_DIR)/arm-tf/build/fvp/debug/fip.bin \
+	--data cluster0.cpu0=$(TOP_DIR)/ramdisk/ramdisk.img@0x84000000 \
+	--data cluster0.cpu0=$(TOP_DIR)/linux/out/arch/arm64/boot/Image@0x80080000  \
+	-C bp.ve_sysregs.mmbSiteDefault=0    \
+	-C bp.ve_sysregs.exit_on_shutdown=1 
+	@echo "\r\nDebug symbol in DS-5:"
+	@echo "add-symbol-file \"$(TOP_DIR)/arm-tf/build/fvp/debug/bl1/bl1.elf\" EL3:0"
+	@echo "add-symbol-file \"$(TOP_DIR)/arm-tf/build/fvp/debug/bl31/bl31.elf\" EL3:0"
+	@echo "add-symbol-file \"$(TOP_DIR)/arm-tf/build/fvp/debug/bl2/bl2.elf\" EL1S:0"
+	@echo "add-symbol-file \"$(TOP_DIR)/linux/out/vmlinux\" EL1N:0"
 
 
