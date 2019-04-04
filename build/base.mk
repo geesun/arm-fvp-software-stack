@@ -132,7 +132,6 @@ run:
 	-C bp.flashloader0.fname=arm-tf/build/fvp/debug/fip.bin \
 	--data cluster0.cpu0=ramdisk/ramdisk.img@0x84000000 \
 	--data cluster0.cpu0=linux/out/arch/arm64/boot/Image@0x80080000  -RSp \
-	--data cluster0.cpu0=linux/out/arch/arm64/boot/dts/arm/fvp-base-aemv8a-aemv8a.dtb@0x82000000 \
 	-C bp.ve_sysregs.mmbSiteDefault=0    \
 	-C bp.ve_sysregs.exit_on_shutdown=1
 
