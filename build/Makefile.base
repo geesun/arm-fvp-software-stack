@@ -1,7 +1,7 @@
 CROSS_COMPILE 	?= aarch64-linux-gnu- 
 CROSS_COMPILE32 ?= arm-linux-gnueabi-
 CROSS_COMPILE_M ?= arm-none-eabi-
-MODEL 			= /home/qixxu01/model/Base_RevC_AEMv8A_pkg/models/Linux64_GCC-4.9/FVP_Base_RevC-2xAEMv8A
+MODEL 			?= Base_RevC_AEMv8A_pkg/models/Linux64_GCC-4.9/FVP_Base_RevC-2xAEMv8A
 
 TARGETS = u-boot arm-tf linux busybox ramdisk
 
@@ -59,11 +59,11 @@ arm-tf.optee.build:
     BL32_EXTRA1=../optee/optee_os/out/arm-plat-vexpress/core/tee-pager_v2.bin \
     BL32_EXTRA2=../optee/optee_os/out/arm-plat-vexpress/core/tee-pageable_v2.bin \
 	BL33=../u-boot/out/u-boot.bin \
-	SCP_BL2=../scp/build/product/sgm775/scp_ramfw/debug/bin/firmware.bin \
-	TRUSTED_BOARD_BOOT=0 ARM_ROTPK_LOCATION=devel_rsa \
+	TRUSTED_BOARD_BOOT=1 ARM_ROTPK_LOCATION=devel_rsa \
 	KEY_ALG=rsa TF_MBEDTLS_KEY_ALG=rsa \
 	ROT_KEY=./plat/arm/board/common/rotpk/arm_rotprivk_rsa.pem  \
 	MBEDTLS_DIR=../mbedtls GENERATE_COT=1 \
+	FVP_HW_CONFIG_DTS=fdts/fvp-base-gicv3-psci-1t.dts \
 	dtbs all fip;
 
 arm-tf.build: 
@@ -75,6 +75,7 @@ arm-tf.build:
 	KEY_ALG=rsa TF_MBEDTLS_KEY_ALG=rsa \
 	ROT_KEY=./plat/arm/board/common/rotpk/arm_rotprivk_rsa.pem  \
 	MBEDTLS_DIR=../mbedtls GENERATE_COT=1 \
+	FVP_HW_CONFIG_DTS=fdts/fvp-base-gicv3-psci-1t.dts \
 	dtbs all fip;
 
 arm-tf.clean:
@@ -131,7 +132,7 @@ run:
 	-C bp.flashloader0.fname=arm-tf/build/fvp/debug/fip.bin \
 	--data cluster0.cpu0=ramdisk/ramdisk.img@0x84000000 \
 	--data cluster0.cpu0=linux/out/arch/arm64/boot/Image@0x80080000  -RSp \
-	--data cluster0.cpu0=arm-tf/build/fvp/debug/fdts/fvp-base-gicv3-psci.dtb@0x82000000 \
+	--data cluster0.cpu0=linux/out/arch/arm64/boot/dts/arm/fvp-base-aemv8a-aemv8a.dtb@0x82000000 \
 	-C bp.ve_sysregs.mmbSiteDefault=0    \
 	-C bp.ve_sysregs.exit_on_shutdown=1
 
