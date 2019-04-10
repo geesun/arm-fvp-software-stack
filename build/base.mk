@@ -4,6 +4,14 @@ CROSS_COMPILE_M ?= arm-none-eabi-
 MODEL 			?= Base_RevC_AEMv8A_pkg/models/Linux64_GCC-4.9/FVP_Base_RevC-2xAEMv8A
 
 TARGETS = u-boot arm-tf linux busybox ramdisk
+ifeq ($(TFTF), 1)
+TARGETS = tftf 
+BL33 = ../tftf/build/fvp/debug/tftf.bin
+else
+TARGETS = u-boot 
+BL33 = ../u-boot/out/u-boot.bin 
+endif
+TARGETS += arm-tf linux busybox ramdisk
 
 TOP_DIR = $(shell pwd)
 
@@ -67,11 +75,19 @@ arm-tf.optee.build:
 	FVP_USE_GIC_DRIVER=FVP_GICV3 \
 	dtbs all fip;
 
+tftf.build:
+	export CROSS_COMPILE=$(CROSS_COMPILE) ; \
+	cd tftf; \
+	make tftf DEBUG=1
+	
+tftf.clean:
+	rm -rf  tftf/build 
+
 arm-tf.build: 
 	export CROSS_COMPILE=$(CROSS_COMPILE) ; \
 	cd arm-tf; \
 	make -j 16  PLAT=fvp ARCH=aarch64 DEBUG=1  \
-	ARM_TSP_RAM_LOCATION=dram BL33=../u-boot/out/u-boot.bin \
+	ARM_TSP_RAM_LOCATION=dram BL33=$(BL33) \
 	TRUSTED_BOARD_BOOT=1 ARM_ROTPK_LOCATION=devel_rsa \
 	KEY_ALG=rsa TF_MBEDTLS_KEY_ALG=rsa \
 	ROT_KEY=./plat/arm/board/common/rotpk/arm_rotprivk_rsa.pem  \
