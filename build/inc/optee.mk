@@ -4,7 +4,7 @@ TF_CONFIG += ARM_TSP_RAM_LOCATION=tdram NEED_BL32=yes SPD=opteed \
     		 BL32_EXTRA1=$(TOP_DIR)/optee/optee_os/out/arm-plat-vexpress/core/tee-pager_v2.bin \
     	   	 BL32_EXTRA2=$(TOP_DIR)/optee/optee_os/out/arm-plat-vexpress/core/tee-pageable_v2.bin 
 else 
-TF_CONFIG += ARM_TSP_RAM_LOCATION=dram
+TF_CONFIG += ARM_TSP_RAM_LOCATION=dram SPD=tspd
 endif
 
 optee.build: 

@@ -4,6 +4,7 @@ TTBR   ?= 1
 
 ifeq ($(TFTF), 1)
 TARGETS = tftf 
+TFTF_TEST ?=standard
 else
 TARGETS = u-boot 
 endif
@@ -60,6 +61,7 @@ ds5:
 	@echo "add-symbol-file \"$(TOP_DIR)/arm-tf/build/fvp/debug/bl1/bl1.elf\" EL3:0"
 	@echo "add-symbol-file \"$(TOP_DIR)/arm-tf/build/fvp/debug/bl31/bl31.elf\" EL3:0"
 	@echo "add-symbol-file \"$(TOP_DIR)/arm-tf/build/fvp/debug/bl2/bl2.elf\" EL1S:0"
+	@echo "add-symbol-file \"$(TOP_DIR)/tftf/build/fvp/debug/tftf/tftf.elf\" EL2N:0"
 	@echo "add-symbol-file \"$(TOP_DIR)/linux/out/vmlinux\" EL1N:0"
 
 
