@@ -4,6 +4,7 @@ MODEL 			?= FVP_CSS_SGI-575/models/Linux64_GCC-4.8/FVP_CSS_SGI-575
 MODEL_CONFIG	?= FVP_CSS_SGI-575/models/Linux64_GCC-4.8/SGI-575_cmn600.yml
 
 TOP_DIR = $(shell pwd)
+CROSS_COMPILE_DIR=$(dir $(CROSS_COMPILE))
 SHELL = /bin/bash 
 
 TARGETS = scp arm-tf linux busybox ramdisk  grub
@@ -36,8 +37,7 @@ uefi.build:
 	make iasl
 		
 	cd uefi/edk2 ; \
-	CROSS_COMPILE_DIR=$(dirname $(CROSS_COMPILE)) ; \
-	PATH="$$PATH:$$CROSS_COMPILE_DIR" ; \
+	PATH="$$PATH:$(CROSS_COMPILE_DIR)" ; \
 	source edksetup.sh ; \
 	make -C BaseTools ; \
 	export EDK2_TOOLCHAIN=GCC5 ; \
@@ -49,8 +49,7 @@ uefi.build:
 
 uefi.clean:
 	cd uefi/edk2 ; \
-	CROSS_COMPILE_DIR=$(dirname $(CROSS_COMPILE)) ; \
-	PATH="$$PATH:$$CROSS_COMPILE_DIR" ; \
+	PATH="$$PATH:$(CROSS_COMPILE_DIR)" ; \
 	source edksetup.sh ; \
 	make -C BaseTools ; \
 	rm -rf Build/ArmSgi ; 
@@ -107,8 +106,7 @@ grub.build:
 	cd grub; \
 	mkdir -p out ;\
     echo "set prefix=(\$$root)/grub/" >out/sgi575.cfg ;\
-	CROSS_COMPILE_DIR=$(dirname $(CROSS_COMPILE)) ; \
-	PATH="$$PATH:$$CROSS_COMPILE_DIR" ; \
+	PATH="$$PATH:$(CROSS_COMPILE_DIR)" ; \
 	if [ ! -f Makefile ] ; then \
 		./autogen.sh ; \
 		./configure STRIP=aarch64-linux-gnu-strip --target=aarch64-linux-gnu --with-platform=efi --prefix=$(TOP_DIR)/grub/out/ --disable-werror  CFLAGS="-g" LDFLAGS="-g"; \
@@ -162,13 +160,28 @@ grub.clean:
 	rm -rf grub/out/
 
 
-
+MODEL_PARAMS= \
+			  -C css.cmn600.mesh_config_file="$(MODEL_CONFIG)"  \
+			  -C css.cmn600.force_on_from_start=1  \
+			  -C css.mcp.ROMloader.fname="$(TOP_DIR)/scp/build/product/sgi575/mcp_romfw/debug/bin/firmware.bin" \
+			  -C css.scp.ROMloader.fname="$(TOP_DIR)/scp/build/product/sgi575/scp_romfw/debug/bin/firmware.bin" \
+			  -C css.trustedBootROMloader.fname="$(TOP_DIR)/arm-tf/build/sgi575/debug/bl1.bin" \
+			  -C board.flashloader0.fname="$(TOP_DIR)/arm-tf/build/sgi575/debug/fip.bin" \
+			  -C board.virtioblockdevice.image_path=$(TOP_DIR)/grub/out/grub-busybox.img \
+			  --data css.scp.armcortexm7ct=$(TOP_DIR)/scp/build/product/sgi575/scp_ramfw/debug/bin/firmware.bin@0x0BD80000 -R
 run:
-	$(MODEL) -C css.cmn600.mesh_config_file="$(MODEL_CONFIG)"  \
-	-C css.cmn600.force_on_from_start=1  \
-	-C css.mcp.ROMloader.fname="scp/build/product/sgi575/mcp_romfw/debug/bin/firmware.bin" \
-	-C css.scp.ROMloader.fname="scp/build/product/sgi575/scp_romfw/debug/bin/firmware.bin" \
-	-C css.trustedBootROMloader.fname="arm-tf/build/sgi575/debug/bl1.bin" \
-	-C board.flashloader0.fname="arm-tf/build/sgi575/debug/fip.bin" \
-	-C board.virtioblockdevice.image_path=grub/out/grub-busybox.img \
-	--data css.scp.armcortexm7ct=scp/build/product/sgi575/scp_ramfw/debug/bin/firmware.bin@0x0BD80000 -R
+	$(MODEL) $(MODEL_PARAMS)
+
+
+ds5:
+	@echo "Model params in DS-5:"
+	@echo $(MODEL_PARAMS)
+	@echo "" 
+	@echo "Debug symbol in DS-5:"
+	@echo "add-symbol-file \"$(TOP_DIR)/arm-tf/build/fvp/debug/bl1/bl1.elf\" EL3:0"
+	@echo "add-symbol-file \"$(TOP_DIR)/arm-tf/build/fvp/debug/bl31/bl31.elf\" EL3:0"
+	@echo "add-symbol-file \"$(TOP_DIR)/arm-tf/build/fvp/debug/bl2/bl2.elf\" EL1S:0"
+	@echo "add-symbol-file \"$(TOP_DIR)/linux/out/vmlinux\" EL2N:0"
+
+
+
