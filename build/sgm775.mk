@@ -3,6 +3,7 @@ CROSS_COMPILE_M ?= arm-none-eabi-
 MODEL 			?= models/Linux64_GCC-4.9/FVP_CSS_SGM-775
 
 TARGETS = scp u-boot arm-tf linux busybox ramdisk device-tree
+TOP_DIR 		= $(shell pwd)
 
 build_TARGETS = $(foreach t,$(TARGETS),$(t).build)
 clean_TARGETS = $(foreach t,$(TARGETS),$(t).clean)
@@ -102,17 +103,32 @@ device-tree.clean:
 	rm device-tree/sgm775.dtb 
 	rm device-tree/sgm775.pre
 
-run:
-	$(MODEL) \
-	-C css.trustedBootROMloader.fname=arm-tf/build/sgm775/debug/bl1.bin \
-	-C css.scp.ROMloader.fname=scp/build/product/sgm775/scp_romfw/debug/bin/firmware.bin \
+MODEL_PARAMS = \
+	-C css.trustedBootROMloader.fname=$(TOP_DIR)/arm-tf/build/sgm775/debug/bl1.bin \
+	-C css.scp.ROMloader.fname=$(TOP_DIR)/scp/build/product/sgm775/scp_romfw/debug/bin/firmware.bin \
 	-C soc.pl011_uart0.unbuffered_output=1 \
 	-C config_id=0 \
 	-C displayController=2 \
-	-C board.flashloader0.fname=arm-tf/build/sgm775/debug/fip.bin \
+	-C board.flashloader0.fname=$(TOP_DIR)/arm-tf/build/sgm775/debug/fip.bin \
 	-C css.cache_state_modelled=0 \
-	--data css.cluster0.cpu0=ramdisk/ramdisk.img@0x88000000 \
-	--data css.cluster0.cpu0=linux/out/uImage@0x80080000  -RSp \
-	--data css.cluster0.cpu0=device-tree/sgm775.dtb@0x83000000 \
+	--data css.cluster0.cpu0=$(TOP_DIR)/ramdisk/ramdisk.img@0x88000000 \
+	--data css.cluster0.cpu0=$(TOP_DIR)/linux/out/uImage@0x80080000  -RSp \
+	--data css.cluster0.cpu0=$(TOP_DIR)/device-tree/sgm775.dtb@0x83000000 \
+
+
+
+run:
+	$(MODEL) $(MODEL_PARAMS) 
+
+
+ds5:
+	@echo "Model params in DS-5:"
+	@echo $(MODEL_PARAMS)
+	@echo "" 
+	@echo "\r\nDebug symbol in DS-5:"
+	@echo "add-symbol-file \"$(TOP_DIR)/arm-tf/build/fvp/debug/bl1/bl1.elf\" EL3:0"
+	@echo "add-symbol-file \"$(TOP_DIR)/arm-tf/build/fvp/debug/bl31/bl31.elf\" EL3:0"
+	@echo "add-symbol-file \"$(TOP_DIR)/arm-tf/build/fvp/debug/bl2/bl2.elf\" EL1S:0"
+	@echo "add-symbol-file \"$(TOP_DIR)/linux/out/vmlinux\" EL2N:0"
 
 
