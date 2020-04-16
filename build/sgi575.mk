@@ -32,20 +32,13 @@ scp.clean:
 	rm scp/build -rf 
 
 uefi.build:
-	cd tools/acpica/generate/unix; \
-	unset HOST; \
-	make iasl
-		
+	export PACKAGES_PATH=:$(TOP_DIR)/uefi/edk2:$(TOP_DIR)/uefi/edk2/edk2-platforms: ;\
+    export GCC5_AARCH64_PREFIX=$(CROSS_COMPILE) ;\
+    export WORKSPACE=$(TOP_DIR)/uefi/edk2 ;\
 	cd uefi/edk2 ; \
-	PATH="$$PATH:$(CROSS_COMPILE_DIR)" ; \
 	source edksetup.sh ; \
 	make -C BaseTools ; \
-	export EDK2_TOOLCHAIN=GCC5 ; \
-	export GCC5_AARCH64_PREFIX=$(CROSS_COMPILE) ;\
-    EXTRA_OPTIONS=-s  ; \
-	IASL_PREFIX=$(TOP_DIR)/tools/acpica/generate/unix/bin/ ; \
-	$(TOP_DIR)/tools/uefi-tools/edk2-build.sh -e ./ -p edk2-platforms -D EDK2_OUT_DIR=Build/ArmSgi -b DEBUG sgi575
-
+    build -n 32 -a AARCH64 -t GCC5 -p Platform/ARM/SgiPkg/SgiPlatform.dsc -b DEBUG -D EDK2_OUT_DIR=Build/ArmSgi -D FIRMWARE_VER=c0b1f749ef-dirty
 
 uefi.clean:
 	cd uefi/edk2 ; \
