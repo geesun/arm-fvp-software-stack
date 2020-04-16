@@ -44,10 +44,8 @@ uefi.clean:
 	cd uefi/edk2 ; \
 	PATH="$$PATH:$(CROSS_COMPILE_DIR)" ; \
 	source edksetup.sh ; \
-	make -C BaseTools ; \
+	make -C BaseTools clean; \
 	rm -rf Build/ArmSgi ; 
-	cd tools/acpica/generate/unix; \
-	make veryclean;
 
 arm-tf.build: 
 	export CROSS_COMPILE=$(CROSS_COMPILE) ; \
