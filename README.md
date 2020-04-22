@@ -56,3 +56,15 @@ https://developer.arm.com/tools-and-software/simulation-models/fixed-virtual-pla
    export MODEL_CONFIG=FVP_CSS_SGI-575/models/Linux64_GCC-4.8/SGI-575_cmn600.yml
    make run
 ```
+## CoreLink RD N1 EDGE 
+
+```
+   repo init -u https://github.com/geesun/manifests.git -m rdn1edge.xml
+   repo sync --fetch-submodules
+   export CROSS_COMPILE=$(TOOL_CHAIN_PATH)/aarch64-linux-gnu-
+   export CROSS_COMPILE_M=$(TOOL_CHAIN_PATH)/arm-none-eabi-
+   make 
+   export MODEL=model/FVP_RD_N1_edge/models/Linux64_GCC-4.9/FVP_RD_N1_edge
+   export MODEL_CONFIG=model/FVP_RD_N1_edge/models/Linux64_GCC-4.9/RD_N1_E1_cmn600.yml
+   make run
+```

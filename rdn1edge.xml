@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <remote fetch="git://git.busybox.net/" name="busybox"/>
+  <remote fetch="https://github.com/" name="github"/>
+  <remote fetch="https://git.linaro.org/" name="linaro"/>
+  <remote fetch="https://github.com/ARMmbed/" name="mbedtls"/>
+  <remote fetch="https://git.savannah.gnu.org" name="gnugit"/>
+  <remote fetch="https://git.kernel.org" name="kernel"/>
+  <remote fetch="https://git.trustedfirmware.org" name="trustedfirmware"/>
+
+  <project remote="linaro" name="landing-teams/working/arm/scp-firmware" path="scp" revision="0125bd38919f6315ebf692ec437d38ab4607364a"/>
+  <project remote="linaro" name="landing-teams/working/arm/arm-tf" path="arm-tf" revision="fb21d05fb0d3d1d7530d5d9489edba371e53ec3f"/>
+  <project remote="linaro" name="landing-teams/working/arm/edk2" path="uefi/edk2" revision="e4a1bf48424923706928298463609edfa8dad971"/>
+  <project remote="linaro" name="landing-teams/working/arm/edk2-platforms" path="uefi/edk2/edk2-platforms" revision="88ef76d2051f8755a6d6f0d84adadd7c134008b3"/>
+  <project remote="linaro" name="landing-teams/working/arm/kernel-release" path="linux" revision="38321d3935f5d6df371477b9ad97b9d194ec2f7a"/>
+
+  <project remote="github" name="ARMmbed/mbedtls.git" path="mbedtls" revision="refs/tags/mbedtls-2.2.1"/>
+  <project remote="github" name="ARM-software/CMSIS_5.git" path="scp/cmsis" revision="refs/tags/5.2.0"/>
+  <project remote="busybox" name="busybox" path="busybox" revision="b096ce0fdda0918f9248ff15838cbc31525fa823"/>
+  <project remote="gnugit" name="git/grub" path="grub" revision="41121742df1af73699965a2aab5fb1f5e6555ad5"/>
+  <project remote="linaro" name="landing-teams/working/arm/ramdisk" path="ramdisk" revision="b57c098ca0561ff39aa70b3fe2c795b7a0108717"/>
+
+
+</manifest>
