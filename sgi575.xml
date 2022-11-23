@@ -17,7 +17,7 @@
   <project name="busybox" remote="busybox" revision="111cdcf295b4cab78521480f52b295d9ae719263" upstream="master"/>
   <project name="landing-teams/working/arm/ramdisk" path="ramdisk" remote="linaro" revision="b57c098ca0561ff39aa70b3fe2c795b7a0108717" upstream="master"/>
   <project name="mbedtls.git" path="mbedtls" remote="mbedtls" revision="6c34268e203d23bbfbfda3f7362dac8b9b9382bc" upstream="master"/>
-  <project name="geesun/manifests" path="tools" remote="github" revision="master" upstream="master">
+  <project name="geesun/arm-fvp-software-stack" path="tools" remote="github" revision="master" upstream="master">
 		  <linkfile dest="Makefile" src="build/sgi575.mk"/>
   </project>
 

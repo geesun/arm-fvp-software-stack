@@ -14,7 +14,7 @@ https://developer.arm.com/tools-and-software/simulation-models/fixed-virtual-pla
 ## Armv8-A Foundation Platform
 
 ```
-   repo init -u https://github.com/geesun/manifests.git -m foundation.xml
+   repo init -u https://github.com/geesun/arm-fvp-software-stack.git -m foundation.xml
    repo sync 
    export CROSS_COMPILE=$(TOOL_CHAIN_PATH)/aarch64-linux-gnu-
    make 
@@ -24,7 +24,7 @@ https://developer.arm.com/tools-and-software/simulation-models/fixed-virtual-pla
 ```
 ## Armv8-A Base Platform 
 ```
-   repo init -u https://github.com/geesun/manifests.git -m base.xml
+   repo init -u https://github.com/geesun/arm-fvp-software-stack.git -m base.xml
    repo sync 
    export CROSS_COMPILE=$(TOOL_CHAIN_PATH)/aarch64-linux-gnu-
    make 
@@ -35,7 +35,7 @@ https://developer.arm.com/tools-and-software/simulation-models/fixed-virtual-pla
 ## CoreLink SGM-775 (Cortex-A75+Cortex-A55) System Guidance for Mobile
 
 ```
-   repo init -u https://github.com/geesun/manifests.git -m sgm775.xml
+   repo init -u https://github.com/geesun/arm-fvp-software-stack.git -m sgm775.xml
    repo sync
    export CROSS_COMPILE=$(TOOL_CHAIN_PATH)/aarch64-linux-gnu-
    export CROSS_COMPILE_M=$(TOOL_CHAIN_PATH)/arm-none-eabi-
@@ -47,7 +47,7 @@ https://developer.arm.com/tools-and-software/simulation-models/fixed-virtual-pla
 ## CoreLink SGI-575 System Guidance for Infrastructure
 
 ```
-   repo init -u https://github.com/geesun/manifests.git -m sgi575.xml
+   repo init -u https://github.com/geesun/arm-fvp-software-stack.git -m sgi575.xml
    repo sync
    export CROSS_COMPILE=$(TOOL_CHAIN_PATH)/aarch64-linux-gnu-
    export CROSS_COMPILE_M=$(TOOL_CHAIN_PATH)/arm-none-eabi-
@@ -59,7 +59,7 @@ https://developer.arm.com/tools-and-software/simulation-models/fixed-virtual-pla
 ## CoreLink RD N1 EDGE 
 
 ```
-   repo init -u https://github.com/geesun/manifests.git -m rdn1edge.xml
+   repo init -u https://github.com/geesun/arm-fvp-software-stack.git -m rdn1edge.xml
    repo sync --fetch-submodules
    export CROSS_COMPILE=$(TOOL_CHAIN_PATH)/aarch64-linux-gnu-
    export CROSS_COMPILE_M=$(TOOL_CHAIN_PATH)/arm-none-eabi-

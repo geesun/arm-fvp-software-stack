@@ -17,7 +17,7 @@
   <project name="mbedtls.git" path="mbedtls" remote="mbedtls" revision="7d728bd70e6a8d129ee07813da1538de1bf95cb2" upstream="master"/>
   <project name="optee_client.git" path="optee/optee_client" remote="optee" revision="73b4e490a8ed0b4a7714818e80998b9d8a7da958" upstream="master"/>
   <project name="optee_os.git" path="optee/optee_os" remote="optee" revision="fefbee97c9e888dd11acff497b6f8b515b70d1ca" upstream="master"/>
-  <project name="geesun/manifests" path="tools" remote="github" revision="master" upstream="master">
+  <project name="geesun/arm-fvp-software-stack" path="tools" remote="github" revision="master" upstream="master">
 		  <linkfile dest="Makefile" src="build/sgm775.mk"/>
   </project>
 </manifest>

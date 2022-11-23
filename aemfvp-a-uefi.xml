@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+	<remote fetch="https://github.com/mirror/" name="busybox"/>
+	<remote fetch="https://github.com/" name="github"/>
+	<remote fetch="https://git.kernel.org/" name="linux"/>
+	<remote fetch="https://git.savannah.gnu.org/git" name="gnu"/>
+	<remote fetch="https://git.trustedfirmware.org/" name="armtf"/>
+
+	<project name="acpica/acpica" path="tools/acpica" remote="github" revision="refs/tags/R03_31_21" />
+	<project name="TF-A/trusted-firmware-a" path="src/arm-tf" remote="armtf" revision="refs/tags/v2.5"/>
+	<project name="tianocore/edk2.git" path="src/uefi/edk2" remote="github" sync-s="true" revision="refs/tags/edk2-stable202108" />
+	<project name="tianocore/edk2-platforms.git" path="src/uefi/edk2/edk2-platforms" remote="github" revision="46026ad759b718142e652618c399a1f68d4e3804"/>
+	<project name="pub/scm/linux/kernel/git/stable/linux.git" path="src/linux" remote="linux" revision="refs/tags/v5.13.13"/>
+	<project name="grub" path="src/grub" remote="gnu" revision="refs/tags/grub-2.06"/>
+	<project name="busybox" path="src/busybox" remote="busybox"  revision="refs/tags/1_34_0"/>
+</manifest>
+

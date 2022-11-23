@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+	<remote fetch="https://github.com/mirror/" name="busybox"/>
+	<remote fetch="https://github.com/" name="github"/>
+	<remote fetch="https://git.kernel.org/" name="linux"/>
+	<remote fetch="https://git.denx.de/" name="uboot"/>
+	<remote fetch="https://git.trustedfirmware.org/" name="armtf"/>
+
+	<project name="TF-A/trusted-firmware-a" path="src/arm-tf" remote="armtf" revision="refs/tags/v2.5"/>
+	<project name="u-boot" path="src/u-boot" remote="uboot" revision="refs/tags/v2021.04"/>
+	<project name="pub/scm/linux/kernel/git/stable/linux.git" path="src/linux" remote="linux" revision="refs/tags/v5.13.13"/>
+	<project name="busybox" path="src/busybox" remote="busybox"  revision="refs/tags/1_34_0"/>
+</manifest>
+
